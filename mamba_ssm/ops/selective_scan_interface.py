@@ -2,6 +2,7 @@
 
 import torch
 import torch.nn.functional as F
+import os
 from mamba_ssm.utils.torch import custom_bwd, custom_fwd
 
 from einops import rearrange, repeat
@@ -15,8 +16,8 @@ except ImportError:
 
 from mamba_ssm.ops.triton.layer_norm import _layer_norm_fwd
 
-import selective_scan_cuda
-
+if os.environ['MAMBA_SKIP_CUDA_BUILD']:
+    selective_scan_cuda = None
 
 class SelectiveScanFn(torch.autograd.Function):
 
