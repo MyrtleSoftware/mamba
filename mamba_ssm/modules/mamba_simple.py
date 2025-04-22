@@ -10,7 +10,14 @@ from torch import Tensor
 
 from einops import rearrange, repeat
 
-from mamba_ssm.ops.selective_scan_interface import selective_scan_fn, mamba_inner_fn
+try:
+    from mamba_ssm.ops.selective_scan_interface import selective_scan_fn, mamba_inner_fn
+except ImportError:
+
+    def fail(*args, **kwargs):
+        raise ImportError("Compile with Triton support for this utility")
+
+    selective_scan_fn, mamba_inner_fn = fail, fail
 
 try:
     from causal_conv1d import causal_conv1d_fn, causal_conv1d_update
